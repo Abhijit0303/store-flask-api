@@ -14,8 +14,10 @@ blueprint = Blueprint(
 
 @blueprint.route("/item")
 class ItemList(MethodView):
+
+    @blueprint.response(200, ItemSchema(many=True))
     def get(self):
-        return {"items": list(items.values())}
+        return items.values()
 
     @blueprint.arguments(ItemUpdateSchema)
     def post(self, item_data):
@@ -59,6 +61,7 @@ class ItemwithID(MethodView):
             )
 
     @blueprint.arguments(ItemSchema)
+    @blueprint.response(201, ItemSchema)
     def put(self, item_data, item_id):
         try:
             item = items[item_id]

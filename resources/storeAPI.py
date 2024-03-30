@@ -14,10 +14,12 @@ blueprint = Blueprint(
 
 @blueprint.route("/store")
 class StoreList(MethodView):
+    @blueprint.response(201, StoreUploadSchema(many=True))
     def get(self):
-        return {"Stores": list(stores.values())}
+        return stores.values()
     
     @blueprint.arguments(StoreUploadSchema)
+    @blueprint.response(201, StoreUploadSchema)
     def post(self, store_data):
         for store in stores.values():
             if store_data["name"] == store["name"]:
@@ -33,6 +35,7 @@ class StoreList(MethodView):
 
 @blueprint.route("/store/<string:store_id>")
 class StoreWithId(MethodView):
+    @blueprint.response(201, StoreUploadSchema)
     def get(self, store_id):
         try:
             return stores[store_id], 201
