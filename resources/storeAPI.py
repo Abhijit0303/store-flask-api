@@ -4,7 +4,7 @@ from flask.views import MethodView
 from flask_smorest import Blueprint, abort
 
 from db import stores
-from schemas import StoreUploadSchema
+from schemas import StoreSchema
 
 blueprint = Blueprint(
                         "store", 
@@ -14,12 +14,12 @@ blueprint = Blueprint(
 
 @blueprint.route("/store")
 class StoreList(MethodView):
-    @blueprint.response(201, StoreUploadSchema(many=True))
+    @blueprint.response(201, StoreSchema(many=True))
     def get(self):
         return stores.values()
     
-    @blueprint.arguments(StoreUploadSchema)
-    @blueprint.response(201, StoreUploadSchema)
+    @blueprint.arguments(StoreSchema)
+    @blueprint.response(201, StoreSchema)
     def post(self, store_data):
         for store in stores.values():
             if store_data["name"] == store["name"]:
@@ -35,7 +35,7 @@ class StoreList(MethodView):
 
 @blueprint.route("/store/<string:store_id>")
 class StoreWithId(MethodView):
-    @blueprint.response(201, StoreUploadSchema)
+    @blueprint.response(201, StoreSchema)
     def get(self, store_id):
         try:
             return stores[store_id], 201
